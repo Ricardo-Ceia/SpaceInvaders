@@ -31,7 +31,11 @@ def check_colisions(missiles,invaders):
 
 
 pygame.init()
+pygame.font.init()
+
 screen = pygame.display.set_mode((1280, 720))
+font = pygame.font.Font(None, 36)
+
 clock = pygame.time.Clock()
 running = True
 
@@ -40,13 +44,14 @@ space_ship = Spaceship((200, 100, 106))
 initial_position = [[640, 680], [620, 700], [660, 700]]
 missiles = []
 invaders = []
+score = 0
 last_execution_time = 0
 interval = 5000
 while running:
     current_time = pygame.time.get_ticks()
     if current_time - last_execution_time >= interval:
         last_execution_time = current_time
-        invader = Invaders((57,255,20),[random.randint(10,1270),10],10)
+        invader = Invaders((57, 255, 20), [random.randint(10, 1270), 10], 10)
         invaders.append(invader)
     
     for event in pygame.event.get():
@@ -59,17 +64,21 @@ while running:
             missile = Missile((255, 165, 0), start, end)
             missiles.append(missile)    
 
-    collisions = check_colisions(missiles,invaders)
+    # Clear the screen first
+    screen.fill("black")
 
-    for missile,invader in collisions:
+    # Update score
+    collisions = check_colisions(missiles, invaders)
+
+    for missile, invader in collisions:
+        score += 1
         if missile in missiles:
             missiles.remove(missile)
         if invader in invaders:
             invaders.remove(invader)
  
-
     for invader in invaders:
-        pygame.draw.circle(screen,invader.color,invader.center,invader.radius)
+        pygame.draw.circle(screen, invader.color, invader.center, invader.radius)
         invader.center[1] += 0.5
     # Update and draw missiles
     for missile in missiles:
@@ -90,6 +99,8 @@ while running:
         initial_position[0][0] += 1
         initial_position[1][0] += 1
         initial_position[2][0] += 1
-
+    print("score:",score)
+    score_text = font.render(f'Score: {score}', True, (255, 255, 255))
+    screen.blit(score_text, (10, 10))
     pygame.display.flip()
-    screen.fill("black")
+
