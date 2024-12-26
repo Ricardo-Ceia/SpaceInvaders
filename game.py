@@ -29,6 +29,13 @@ def check_colisions(missiles,invaders):
                 collisions.append((missile,invader))
     return collisions
 
+def game_over(invaders,font,score):
+    for invader in invaders:
+        if invader.center[1] + invader.radius >= 720:
+            game_over_text = font.render(f'GAME OVER:{score}',True,(0,255,0))
+            screen.fill('black')
+            screen.blit(game_over_text,(640-80,360))
+            return 
 
 pygame.init()
 pygame.font.init()
@@ -102,5 +109,6 @@ while running:
     print("score:",score)
     score_text = font.render(f'Score: {score}', True, (255, 255, 255))
     screen.blit(score_text, (10, 10))
+    game_over(invaders,font,score)
     pygame.display.flip()
 
