@@ -40,6 +40,9 @@ def game_over(invaders,font,score):
 pygame.init()
 pygame.font.init()
 
+pygame.mixer.init()
+laser_sound = pygame.mixer.Sound('space_laser.wav')
+
 screen = pygame.display.set_mode((1280, 720))
 font = pygame.font.Font(None, 36)
 
@@ -52,9 +55,16 @@ initial_position = [[640, 680], [620, 700], [660, 700]]
 missiles = []
 invaders = []
 score = 0
+
 last_execution_time = 0
 interval = 5000
+
+laser_cooldwon = 300
+last_laser_time = 0
+
+
 while running:
+    laser_channel = pygame.mixer.Channel(0)
     current_time = pygame.time.get_ticks()
     if current_time - last_execution_time >= interval:
         last_execution_time = current_time
@@ -69,7 +79,9 @@ while running:
             start = initial_position[0][:]
             end = [initial_position[0][0], initial_position[0][1] - 10]
             missile = Missile((255, 165, 0), start, end)
-            missiles.append(missile)    
+            missiles.append(missile)   
+            if not laser_channel.get_busy():
+                laser_channel.play(laser_sound) 
 
     # Clear the screen first
     screen.fill("black")
@@ -92,7 +104,7 @@ while running:
         missile.start[1] -= 1
         missile.end[1] -= 1
         pygame.draw.line(screen, missile.color, missile.start, missile.end, width=1)
-
+    
     # Draw spaceship
     pygame.draw.polygon(screen, space_ship.color, tuple(initial_position))
 
