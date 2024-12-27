@@ -59,10 +59,6 @@ score = 0
 last_execution_time = 0
 interval = 5000
 
-laser_cooldwon = 300
-last_laser_time = 0
-
-
 while running:
     laser_channel = pygame.mixer.Channel(0)
     current_time = pygame.time.get_ticks()
